@@ -172,9 +172,14 @@ dl.kv code { overflow-wrap: anywhere; }
 
 .support { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 32px; align-items: center; padding: 28px 0 48px; border-top: 1px solid var(--rule); scroll-margin-top: 72px; }
 .support p { color: var(--ink-dim); margin-top: 6px; max-width: 52ch; }
-.addr-box { display: flex; gap: 10px; align-items: stretch; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: 12px; box-shadow: var(--shadow); }
-.addr { flex: 1; min-width: 0; align-self: center; background: none; padding: 0 4px; font: 13px/1.6 var(--mono); overflow-wrap: normal; word-break: normal; user-select: all; }
-.btn.copy { flex: none; }
+.addr-list { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); box-shadow: var(--shadow); }
+.addr-row { display: flex; gap: 14px; align-items: center; padding: 14px 16px; border-top: 1px solid var(--rule); }
+.addr-row:first-child { border-top: 0; }
+.addr-main { flex: 1; min-width: 0; }
+.addr-label { display: block; color: var(--ink-dim); font-size: 12.5px; font-weight: 550; margin-bottom: 3px; }
+.addr { display: block; background: none; padding: 0; font: 13px/1.6 var(--mono); overflow-wrap: normal; word-break: normal; user-select: all; }
+.addr.token { overflow-wrap: anywhere; }
+.btn.copy { flex: none; min-width: 74px; }
 .btn.copy.done { color: var(--gain); border-color: rgb(29 122 62 / .5); }
 
 footer { border-top: 1px solid var(--rule); background: var(--surface); color: var(--ink-dim); font-size: 14px; }
@@ -215,7 +220,8 @@ footer .brand { color: var(--ink); }
   .hero .actions .btn { flex: 1 1 100%; }
   .glance { padding: 4px 16px; }
   .panel { padding: 18px 16px 20px; }
-  .addr-box { flex-direction: column; }
+  .addr-row { flex-direction: column; align-items: stretch; gap: 10px; }
+  .addr { font-size: 12px; }
   .btn.copy { width: 100%; height: 40px; }
   dl.kv > div { grid-template-columns: 1fr; gap: 0; }
   .foot { grid-template-columns: 1fr 1fr; gap: 24px; padding-top: 28px; }
