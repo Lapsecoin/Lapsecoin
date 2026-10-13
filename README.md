@@ -1,13 +1,11 @@
-# LapseCoin website
+<div align="center">
 
-The site for [LapseCoin](https://github.com/Lapsecoin/core), served by GitHub Pages from the root of `main`:
-https://lapsecoin.github.io/
+<img src="lapsecoin.svg" alt="" width="72">
 
-Pages are written in `pages/`. `build.py` adds the shared head, navigation and footer and writes the `.html` files in the root. Run it after any edit:
+# LapseCoin
 
-```
-python build.py          # write the pages
-python build.py --check  # fail if they are out of date
-```
+Peer-to-peer electronic cash.
 
-Edit `pages/` for content and `build.py` for anything shared. Do not edit the generated `.html` files.
+[Website](https://lapsecoin.github.io) · [Download](https://github.com/Lapsecoin/core/releases) · [Discord](https://discord.gg/FP2d8JmK6r)
+
+</div>
