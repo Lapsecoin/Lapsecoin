@@ -1,7 +1,7 @@
 # LapseCoin website
 
 The site for [LapseCoin](https://github.com/Lapsecoin/core), served by GitHub Pages from the root of `main`:
-https://lapsecoin.github.io/Lapsecoin/
+https://lapsecoin.github.io/
 
 Pages are written in `pages/`. `build.py` adds the shared head, navigation and footer and writes the `.html` files in the root. Run it after any edit:
 

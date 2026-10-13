@@ -16,7 +16,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-SITE = "https://lapsecoin.github.io/Lapsecoin"
+SITE = "https://lapsecoin.github.io"
 NAME = "LapseCoin"
 LOGO = f"{SITE}/logo-512.png"
 SUPPORT_ADDRESS = ("report.crane.scan.sound.raccoon.orient.exercise."
