@@ -1,0 +1,125 @@
+<div class="wrap">
+<div class="page-head"><h1>Transactions</h1><p>The format, how to sign one, and what a node checks. A transaction is plain, visible JSON.</p></div>
+<div class="doc"><div class="prose">
+<section id="transaction-format">
+<h2>Transaction format</h2>
+<p>A transaction is a plain, visible JSON object. Nothing in it is encrypted, the memo included.</p>
+<div class="tbl"><table>
+<tr><th>Field</th><th>Required</th><th>Description</th></tr>
+<tr><td><code>from</code></td><td>yes</td><td>Sender address (twelve dot-separated words)</td></tr>
+<tr><td><code>pubkey</code></td><td>yes</td><td>Sender's FALCON-512 public key, hex. Its derived address must equal <code>from</code>.</td></tr>
+<tr><td><code>outputs</code></td><td>yes</td><td>Non-empty list of <code>{"to": address, "amount": ticks}</code>, at most 500. Amounts are positive integers. You cannot pay your own address.</td></tr>
+<tr><td><code>nonce</code></td><td>yes</td><td>Integer, exactly the sender's last used nonce plus one (the first transaction uses 1)</td></tr>
+<tr><td><code>fee</code></td><td>yes</td><td>Non-negative integer in ticks, chosen by the sender</td></tr>
+<tr><td><code>memo</code></td><td>no</td><td>Plaintext string, at most 200 bytes, no null bytes. Omit the key entirely when there is no memo.</td></tr>
+<tr><td><code>signature</code></td><td>yes</td><td>FALCON-512 signature over the canonical JSON of every other field, hex</td></tr>
+</table></div>
+<p>Unknown fields are rejected. The sender's balance must cover the sum of all outputs plus the fee. 1 LAPSE = 100,000,000 ticks.</p>
+</section>
+<section id="signing">
+<h2>Signing</h2>
+<ol>
+<li>Build the transaction object without <code>signature</code>.</li>
+<li>Serialize it as canonical JSON: keys sorted, no whitespace. The node uses <code>orjson</code> with sorted keys. For integers and strings, Python's <code>json.dumps(tx, sort_keys=True, separators=(",", ":"), ensure_ascii=False)</code> produces the same bytes.</li>
+<li>Sign those bytes with FALCON-512 (liboqs, algorithm name <code>"Falcon-512"</code>).</li>
+<li>Add the signature as a hex string in <code>signature</code>.</li>
+<li>POST the whole object to <code>/api/tx/send</code>.</li>
+</ol>
+<p>FALCON signing uses fresh randomness, so re-signing the same content gives a different valid signature. The transaction hash excludes the signature, so the hash stays the same.</p>
+</section>
+<section id="fees">
+<h2>Fees</h2>
+<p>The fee is an absolute amount in ticks. Builders prefer higher fee per byte, where the size is the canonical JSON length of the transaction excluding the signature (and including the fee field itself). <code>GET /api/fees</code> reports the current <code>next_block</code> rate. Board posts (memo starting with <code>[board] </code>) have an additional protocol-enforced fee floor.</p>
+</section>
+<section id="nonce">
+<h2>Nonce</h2>
+<p>Nonces are sequential per sender, starting from 0 for an address that has never sent. A transaction is valid only if its nonce is exactly the last used nonce plus one, counting the sender's pending mempool transactions. <code>GET /api/state?addr=...</code> reports the highest nonce used, confirmed or pending; the next transaction uses that plus one. See <a href="api.html">the API page</a>.</p>
+</section>
+<section id="board-memos">
+<h2>Board memos</h2>
+<p>The board is made of ordinary transactions whose memo follows a few conventions. A <em>ref</em> is the first six hex characters of a post's transaction hash.</p>
+<div class="tbl"><table>
+<tr><th>Memo</th><th>Meaning</th></tr>
+<tr><td><code>[board] </code> + text</td><td>A post. May begin with a profile header <code>[p:icon:nick]</code> and then a reply header <code>[r:ref]</code>. Pays the board fee floor and burns 1 tick.</td></tr>
+<tr><td><code>[vote+] ref</code>, <code>[vote-] ref</code></td><td>A vote on a post. Not a board post: no fee floor, 1 tick burned.</td></tr>
+<tr><td><code>[board] [e:ref:pos:ndel]text</code></td><td>An edit. In the sender's post with that ref, replace <code>ndel</code> characters at character position <code>pos</code> with <code>text</code>. It is a board post, so it pays the fee floor, burns 1 tick and counts toward the floor's staircase.</td></tr>
+<tr><td><code>[del] ref</code></td><td>Hides the sender's post with that ref. Not a board post: no fee floor, 1 tick burned.</td></tr>
+</table></div>
+<p>Edits and deletes change nothing on the chain, and nothing could: the original text stays in its block. They are rules that readers apply the same way. An edit or delete acts only on a post by its own sender that came before it, and an edit is applied to the post as earlier edits left it, in chain order. The result must be non-empty and fit in a post (200 bytes of memo less the <code>[board] </code> tag). An edit that cannot be applied is not hidden: it shows as the ordinary post it also is. The node's validation does not check any of this, so a node will relay an edit or delete of someone else's post, and readers will ignore it.</p>
+</section>
+<section id="address-derivation">
+<h2>Address derivation</h2>
+<ul>
+<li>Take the SHA-256 of the raw FALCON-512 public key bytes.</li>
+<li>Keep the first 132 bits and split them into twelve 11-bit indices, most significant first.</li>
+<li>Look each index up in the BIP39 English wordlist (2048 words, shipped as <code>src/bip39_english.txt</code>) and join with dots.</li>
+</ul>
+<p>Addresses are a one-way hash of the public key, so any syntactically valid word sequence passes validation. Validity does not prove that anyone holds the key.</p>
+<p>These twelve words are an address, not a recovery phrase, and cannot restore a key. Wallets that restore keys from a phrase the user already has should follow <a href="wallets.html">Wallet integration</a>.</p>
+</section>
+<section id="python-example">
+<h2>Python example</h2>
+<p>Requires <code>liboqs-python</code> (module <code>oqs</code>) and <code>requests</code>. Keys come from <code>oqs.Signature("Falcon-512").generate_keypair()</code> and <code>export_secret_key()</code>.</p>
+<pre>import hashlib, json, requests, oqs
+
+NODE = "https://lapsenode.vicnas.me"
+WORDLIST = open("bip39_english.txt").read().split()   # src/bip39_english.txt in the repo
+
+def address_from_pubkey(pk: bytes) -> str:
+    bits = int.from_bytes(hashlib.sha256(pk).digest()[:17], "big") &gt;&gt; 4   # top 132 bits
+    return ".".join(WORDLIST[(bits &gt;&gt; (11 * i)) &amp; 0x7FF] for i in range(11, -1, -1))
+
+def canonical(obj) -&gt; bytes:
+    return json.dumps(obj, sort_keys=True, separators=(",", ":"),
+                      ensure_ascii=False).encode()
+
+def next_nonce(addr: str) -&gt; int:
+    state = requests.get(f"{NODE}/api/state", params={"addr": addr}).json()
+    return state["nonce"] + 1   # highest nonce used, confirmed or pending
+
+def send(secret_key: bytes, public_key: bytes, to_addr: str,
+         amount_ticks: int, fee_ticks: int, memo: str = ""):
+    addr = address_from_pubkey(public_key)
+    tx = {
+        "from": addr,
+        "pubkey": public_key.hex(),
+        "outputs": [{"to": to_addr, "amount": amount_ticks}],
+        "nonce": next_nonce(addr),
+        "fee": fee_ticks,
+    }
+    if memo:
+        tx["memo"] = memo
+    signature = oqs.Signature("Falcon-512", secret_key).sign(canonical(tx))
+    tx["signature"] = signature.hex()
+    return requests.post(f"{NODE}/api/tx/send", json=tx).json()
+    # {"ok": true, "tx_hash": "..."} or {"ok": false, "error": "..."}</pre>
+</section>
+<section id="deposit-detection">
+<h2>Deposit detection</h2>
+<pre>import requests
+
+def confirmed_deposits(node, addr):
+    rows = requests.get(f"{node}/api/address/{addr}/history").json()
+    for r in rows:
+        if r["direction"] != "received":
+            continue
+        tx = r["tx"]
+        ticks = sum(o["amount"] for o in tx["outputs"] if o["to"] == addr)
+        yield r["tx_hash"], r["height"], ticks, tx.get("memo", "")
+
+def confirmations(node, tx_hash):
+    t = requests.get(f"{node}/api/tx/{tx_hash}").json()
+    return t.get("confirmations", 0)</pre>
+<p>Deduplicate by <code>tx_hash</code>, sum every output paying your address (one transaction can pay you more than once), and wait for the confirmation depth you are comfortable with before crediting.</p>
+</section>
+<section id="notes">
+<h2>Notes</h2>
+<ul>
+<li>Amounts are integer ticks. Never use floating point for balances.</li>
+<li>The memo is optional, public and permanent.</li>
+<li>The burn address (the first twelve words of the BIP39 list) can never be a sender.</li>
+<li>Wallet keys held by a node are stored encrypted with Argon2id and a mandatory passphrase.</li>
+</ul>
+</section>
+</div><aside class="toc" aria-label="On this page"><b>On this page</b><a href="#transaction-format">Transaction format</a><a href="#signing">Signing</a><a href="#fees">Fees</a><a href="#nonce">Nonce</a><a href="#board-memos">Board memos</a><a href="#address-derivation">Address derivation</a><a href="#python-example">Python example</a><a href="#deposit-detection">Deposit detection</a><a href="#notes">Notes</a></aside></div>
+</div>
