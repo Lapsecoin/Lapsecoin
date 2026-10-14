@@ -35,7 +35,7 @@
     latest.lastChild.appendChild(link("https://github.com/Lapsecoin/core/releases", "Open the releases page on GitHub"));
   }
 
-  function renderLatest(r) {
+  function renderLatest(r, stable) {
     var p = el("section", "panel dl-latest");
     var main = el("div", "dl-main");
     main.appendChild(el("small", null, "Latest release, " + day(r.published)));
@@ -45,6 +45,11 @@
     if (r.linux) actions.appendChild(link(r.linux.url, "Linux (" + mb(r.linux.size) + ")", "btn lg"));
     main.appendChild(actions);
     main.appendChild(link(r.url, "Release notes", "dl-notes"));
+    if (stable) {
+      var perm = el("p", "dl-sub", "Stable link to the newest Windows installer, for scripts: ");
+      perm.appendChild(link(stable, stable.replace("https://", "")));
+      main.appendChild(perm);
+    }
     p.appendChild(main);
 
     var facts = el("dl", "dl-facts");
@@ -101,7 +106,7 @@
     .then(function (data) {
       var list = (data && data.releases) || [];
       if (!list.length) return fail();
-      renderLatest(list[0]);
+      renderLatest(list[0], data.latest_msi);
       renderOlder(list.slice(1));
       document.getElementById("dl-note").hidden = false;
     })
