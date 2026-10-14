@@ -208,6 +208,35 @@ footer a:hover { color: var(--ink); text-decoration: underline; text-underline-o
 footer .brand { color: var(--ink); }
 .legal { border-top: 1px solid var(--rule); padding: 16px 0 22px; font-size: 13px; }
 
+/* downloads: the newest release large, the rest as a quiet table. The VirusTotal
+ * state is a dot plus its words, never colour alone. */
+.dl-latest { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 40px; align-items: start; }
+.dl-main small { color: var(--ink-dim); font-size: 13px; }
+.dl-main h2 { font-size: 44px; line-height: 1.05; letter-spacing: -.03em; font-weight: 650; margin: 4px 0 18px; font-variant-numeric: tabular-nums; }
+.dl-main .actions { margin-bottom: 14px; }
+.dl-notes { font-size: 14px; }
+.dl-facts { margin: 0; }
+.dl-facts > div { padding: 10px 0; border-top: 1px solid var(--rule); }
+.dl-facts > div:first-child { border-top: 0; padding-top: 0; }
+.dl-facts dt { color: var(--ink-dim); font-size: 12.5px; margin-bottom: 3px; }
+.dl-facts dd { margin: 0; }
+.dl-facts code { font-size: 12.5px; overflow-wrap: anywhere; }
+.dl-sub { display: block; color: var(--ink-dim); font-size: 12.5px; margin-top: 3px; }
+.dl-h { font-size: 17px; letter-spacing: -.01em; margin: 32px 0 0; }
+.dl-table { min-width: 720px; }
+.dl-table td { white-space: nowrap; }
+.dl-date { color: var(--ink-dim); white-space: nowrap; }
+.vt { display: inline-flex; align-items: center; gap: 7px; font-weight: 550; }
+.vt i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-dim); flex: none; }
+.vt.ok { color: var(--gain); }
+.vt.ok i { background: var(--gain); }
+.vt.warn { color: var(--loss); }
+.vt.warn i { background: var(--loss); }
+.vt.none { color: var(--ink-dim); font-weight: 400; }
+#dl-latest + #dl-older + .note, #dl-note { margin-top: 20px; max-width: 74ch; }
+@media (max-width: 1000px) { .dl-latest { grid-template-columns: minmax(0, 1fr); gap: 22px; } }
+@media (max-width: 760px) { .dl-main h2 { font-size: 36px; } .dl-main .actions .btn { flex: 1 1 100%; } }
+
 @media (max-width: 1000px) {
   .doc { grid-template-columns: minmax(0, 1fr); }
   .toc { display: none; }
