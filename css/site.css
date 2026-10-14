@@ -170,6 +170,21 @@ dl.kv code { overflow-wrap: anywhere; }
 .links small { display: block; color: var(--ink-dim); font-size: 13px; line-height: 1.45; margin-top: 1px; }
 .note { margin-top: 12px; color: var(--ink-dim); font-size: 13.5px; }
 
+/* listings on other sites */
+.band .sub { color: var(--ink-dim); margin-top: 4px; }
+.listings { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
+.listing { display: flex; flex-direction: column; align-items: flex-start; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+.listing .ico { width: 40px; height: 40px; border-radius: 10px; background: rgb(194 87 12 / .1); color: var(--link); display: grid; place-items: center; }
+.listing .ico svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.listing h3 { margin: 14px 0 4px; font-size: 16px; letter-spacing: -.01em; }
+.listing p { color: var(--ink-dim); font-size: 14px; line-height: 1.5; }
+.listing .more { margin-top: auto; padding-top: 16px; display: inline-flex; align-items: center; gap: 6px; font-weight: 550; text-decoration: none; }
+.listing .more:hover { text-decoration: underline; text-underline-offset: 2px; }
+.listing .more svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .12s; }
+.listing .more:hover svg { transform: translateX(2px); }
+.listing .badge { margin-top: auto; padding-top: 14px; display: block; line-height: 0; }
+.badge-img { width: 230px; max-width: 100%; height: auto; }
+
 .support { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 32px; align-items: center; padding: 28px 0 48px; border-top: 1px solid var(--rule); scroll-margin-top: 72px; }
 .support p { color: var(--ink-dim); margin-top: 6px; max-width: 52ch; }
 .addr-list { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); box-shadow: var(--shadow); }
@@ -221,6 +236,7 @@ footer .brand { color: var(--ink); }
   .glance { padding: 4px 16px; }
   .panel { padding: 18px 16px 20px; }
   .addr-row { flex-direction: column; align-items: stretch; gap: 10px; }
+  .listings { grid-template-columns: minmax(0, 1fr); }
   .addr { font-size: 12px; }
   .btn.copy { width: 100%; height: 40px; }
   dl.kv > div { grid-template-columns: 1fr; gap: 0; }
