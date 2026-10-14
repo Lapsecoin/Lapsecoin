@@ -99,6 +99,15 @@ def head(filename, title, description):
 <meta name="theme-color" content="#f4f1ea">
 <link rel="preload" href="css/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/site.css">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2XWCJKT8GJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2XWCJKT8GJ');
+</script>
 </head>"""
 
 
