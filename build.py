@@ -26,7 +26,7 @@ BITCOIN_ADDRESS = "bc1q8qxvr5zuws78650wz9rgzpqxfx7dqzl38rdtsw"
 DISCORD = "https://discord.gg/FP2d8JmK6r"
 GITHUB = "https://github.com/Lapsecoin/core"
 RELEASES = "downloads.html"          # the page that lists them; GitHub has the full history
-WHITEPAPER = GITHUB + "/blob/main/docs/whitepaper.md"
+WHITEPAPER = "https://lapsecoin.github.io/core/whitepaper.html"   # published by lapsecoin/core
 LIVE_NODE = "https://lapsenode.vicnas.me/"
 
 HOME_DESCRIPTION = (
