@@ -3,7 +3,7 @@
 <div class="doc"><div class="prose">
 <section id="status">
 <h2>Status</h2>
-<p>This is the recommended convention for wallet developers. The LapseCoin node follows it from version 1.1.0: a new node creates a recovery phrase, shows it once, and keeps it sealed under the user's passphrase. It derives each address as one account of that phrase, so one node can hold several addresses (<code>--new-address</code>), and <code>--export</code> prints a short key (<code>lc1-</code>, about 120 characters) for a single account so a second machine can mine without ever holding the phrase. A node that still has the older single random key moves its funds to account 0 of a new phrase on its first start. Nothing on the chain depends on this page, because a wallet only ever shows the network a public key and a signature. Following it makes a phrase portable between wallets, and wallets that do not follow it simply cannot restore each other's phrases.</p>
+<p>This is the recommended convention for wallet developers. The LapseCoin node implements it from version 1.1.0. Nothing on the chain depends on this page, because a wallet only ever shows the network a public key and a signature. Following it makes a phrase portable between wallets, and wallets that do not follow it simply cannot restore each other's phrases.</p>
 </section>
 <section id="two-kinds-of-words">
 <h2>Two kinds of twelve words</h2>
