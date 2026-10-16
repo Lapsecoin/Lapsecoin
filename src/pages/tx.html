@@ -40,7 +40,7 @@
 <p>The board is made of ordinary transactions whose memo follows a few conventions. A <em>ref</em> is the first six hex characters of a post's transaction hash.</p>
 <div class="tbl"><table>
 <tr><th>Memo</th><th>Meaning</th></tr>
-<tr><td><code>[board] </code> + text</td><td>A post. May begin with a profile header <code>[p:icon:nick]</code> and then a reply header <code>[r:ref]</code>. Pays the board fee floor and burns 1 tick.</td></tr>
+<tr><td><code>[board] </code> + text</td><td>A post. May begin with a profile header <code>[p:icon:nick]</code> (still valid on the chain, but the node no longer writes or shows it) and then a reply header <code>[r:ref]</code>. Pays the board fee floor and burns 1 tick.</td></tr>
 <tr><td><code>[vote+] ref</code>, <code>[vote-] ref</code></td><td>A vote on a post. Not a board post: no fee floor, 1 tick burned.</td></tr>
 <tr><td><code>[board] [e:ref:pos:ndel]text</code></td><td>An edit. In the sender's post with that ref, replace <code>ndel</code> characters at character position <code>pos</code> with <code>text</code>. It is a board post, so it pays the fee floor, burns 1 tick and counts toward the floor's staircase.</td></tr>
 <tr><td><code>[del] ref</code></td><td>Hides the sender's post with that ref. Not a board post: no fee floor, 1 tick burned.</td></tr>

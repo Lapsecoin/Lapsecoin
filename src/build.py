@@ -21,8 +21,8 @@ ROOT = os.path.dirname(SRC)
 SITE = "https://lapsecoin.github.io"
 NAME = "LapseCoin"
 LOGO = f"{SITE}/logo-512.png"
-SUPPORT_ADDRESS = ("report.crane.scan.sound.raccoon.orient.exercise."
-                   "patient.vital.season.point.cabbage")
+SUPPORT_ADDRESS = ("quality.occur.weird.force.hawk.joy.dice."
+                   "kid.someone.box.cushion.quarter")
 # Also in the README of lapsecoin/core.
 BITCOIN_ADDRESS = "bc1q8qxvr5zuws78650wz9rgzpqxfx7dqzl38rdtsw"
 DISCORD = "https://discord.gg/FP2d8JmK6r"
