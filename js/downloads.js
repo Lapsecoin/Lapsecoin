@@ -5,6 +5,7 @@
   var latest = document.getElementById("dl-latest");
   var older = document.getElementById("dl-older");
   if (!latest || !older) return;
+  var STORE = "https://apps.microsoft.com/detail/xpdcf9572b3766";
 
   function el(tag, cls, text) {
     var e = document.createElement(tag);
@@ -42,6 +43,7 @@
     main.appendChild(el("h2", null, r.version));
     var actions = el("div", "actions");
     actions.appendChild(link(r.msi.url, "Download for Windows (" + mb(r.msi.size) + ")", "btn primary lg"));
+    actions.appendChild(link(STORE, "Microsoft Store", "btn lg"));
     if (r.linux) actions.appendChild(link(r.linux.url, "Linux (" + mb(r.linux.size) + ")", "btn lg"));
     main.appendChild(actions);
     main.appendChild(link(r.url, "Release notes", "dl-notes"));
